@@ -11,6 +11,7 @@ public class NumberPad : MonoBehaviour
     public int[] CorrectCombination;
     [SerializeField] private int[] _enteredCombination;
     private int _totalKeyPress;
+    [SerializeField] private GameObject _keyCard;
 
     private void Awake()
     {
@@ -28,7 +29,11 @@ public class NumberPad : MonoBehaviour
         _totalKeyPress++;
         if (_enteredCombination.Length <= _totalKeyPress)
         {
-            _totalKeyPress = 0;
+            if (CheckCombination())
+            {
+                _keyCard.gameObject.SetActive(true);
+            }
+            Reset();
         }
         UpdateDisplay();
     }
@@ -41,5 +46,27 @@ public class NumberPad : MonoBehaviour
             combination += digit.ToString() + " ";
         }
         _combinationText.SetText(combination);
+    }
+
+    private bool CheckCombination()
+    {
+        for (int i = 0; i < CorrectCombination.Length; i++)
+        {
+            if (_enteredCombination[i] != CorrectCombination[i])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void Reset()
+    {
+        for (int i = 0; i < _enteredCombination.Length; i++)
+        {
+            _enteredCombination[i] = 0;
+        }
+
+        _totalKeyPress = 0;
     }
 }
